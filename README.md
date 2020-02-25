@@ -9,3 +9,5 @@ Working functions:
 5. Auto-update reservation system.
 
 Note: auto-update functions are based on SYSDATE
+
+Note # 2: Please re-run all the scripts since there are minor changes and additions.

@@ -38,8 +38,8 @@ public class PatronSearchBook extends javax.swing.JDialog {
         
         this.con = con;
         this.patronId = patronId;
-        
         initComponents();
+        autoUpdateReservationSystem();
         
         this.getContentPane().setBackground(new java.awt.Color(242,223,167));
         this.setLocationRelativeTo(parent);
@@ -224,6 +224,13 @@ public class PatronSearchBook extends javax.swing.JDialog {
     private Object[] columns() {
         Object[] ret = {"ISBN no.", "Title", "Author", "Published Year", "Place of Publication", "Status"};
         return ret;
+    }
+    private void autoUpdateReservationSystem() {
+        try {
+            cst = con.prepareCall("{CALL autoupdatereservation}");
+            cst.execute();
+            System.out.println("RESERVE COMMIT");
+        } catch (SQLException ex) {}
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable bookDetailsTable;

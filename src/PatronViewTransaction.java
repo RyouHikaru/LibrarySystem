@@ -160,7 +160,7 @@ public class PatronViewTransaction extends javax.swing.JDialog {
         try {
             cst = con.prepareCall("{CALL autoupdatetransaction}");
             cst.execute();
-            System.out.println("COMMIT");
+            System.out.println("TRANSACTION COMMIT");
         } catch (SQLException ex) {}
     }
     private Object[] columns() {

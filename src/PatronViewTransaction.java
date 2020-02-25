@@ -22,7 +22,6 @@ public class PatronViewTransaction extends javax.swing.JDialog {
     private static CallableStatement cst;
     private static Connection con;
     private static String patronId;
-    private int rows;
 
     /**
      * Creates new form PatronViewTransaction
@@ -35,7 +34,7 @@ public class PatronViewTransaction extends javax.swing.JDialog {
         this.patronId = patronId;
         this.con = con;
         initComponents();
-        setDataArray();
+        setTableData();
         
         this.getContentPane().setBackground(new java.awt.Color(242,223,167));
         this.setLocationRelativeTo(parent);
@@ -119,7 +118,7 @@ public class PatronViewTransaction extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_returnButtonActionPerformed
 
-    private void setDataArray() {
+    private void setTableData() {
         try {
             cst = con.prepareCall("{CALL retrieveTransactions(?,?)}");
             cst.setInt(1, Integer.parseInt(patronId));  // set IN parameter "p_patron_no"

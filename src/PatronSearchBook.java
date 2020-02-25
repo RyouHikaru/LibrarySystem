@@ -1,13 +1,13 @@
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import java.sql.Types;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleTypes;
 
@@ -23,27 +23,21 @@ import oracle.jdbc.OracleTypes;
  */
 public class PatronSearchBook extends javax.swing.JDialog {
     private static CallableStatement cst;
-    private Connection con;
+    private static String patronId;
+    private static Connection con;
     private static String title;
+    private DefaultTableModel dModel;
     private Object[][] data;
-    // temp vars
-    private String host = "jdbc:oracle:thin:@localhost:1521:orcl";
-    private String username = "admin";
-    private String password = "123";
 
     /**
      * Creates new form PatronSearchBook
      * @param parent
      */
-    public PatronSearchBook(java.awt.Frame parent) {
+    public PatronSearchBook(java.awt.Frame parent, String patronId, Connection con) {
         super(parent);
         
-        try {
-            this.con = DriverManager.getConnection(host, username, password);
-            con.setAutoCommit(true);
-            System.out.println("Connected to database");
-        }
-        catch(SQLException e) {}
+        this.con = con;
+        this.patronId = patronId;
         
         initComponents();
         
@@ -60,33 +54,16 @@ public class PatronSearchBook extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        bookDetailsTable = new javax.swing.JTable();
         searchTextField = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
         hintLabel = new javax.swing.JLabel();
         returnButton = new javax.swing.JButton();
+        reserveButton = new javax.swing.JButton();
+        tableScrollPane = new javax.swing.JScrollPane();
+        bookDetailsTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Search book");
-
-        bookDetailsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ISBN no.", "Title", "Author", "Year published", "Place of publication"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(bookDetailsTable);
 
         searchButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search1.png"))); // NOI18N
         searchButton.addActionListener(new java.awt.event.ActionListener() {
@@ -99,26 +76,55 @@ public class PatronSearchBook extends javax.swing.JDialog {
         hintLabel.setText("Please enter book title");
 
         returnButton.setText("Return");
+        returnButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnButtonActionPerformed(evt);
+            }
+        });
+
+        reserveButton.setText("Reserve");
+        reserveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reserveButtonActionPerformed(evt);
+            }
+        });
+
+        bookDetailsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ISBN no.", "Title", "Author", "Published Year", "Place of Publication", "Status"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableScrollPane.setViewportView(bookDetailsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(47, 47, 47)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tableScrollPane)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
+                        .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(518, 518, 518)
+                        .addComponent(reserveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 744, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(hintLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(searchButton))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(351, 351, 351)
-                        .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(hintLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(searchButton)))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -131,9 +137,11 @@ public class PatronSearchBook extends javax.swing.JDialog {
                     .addComponent(searchTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchButton, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(returnButton)
+                .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(returnButton)
+                    .addComponent(reserveButton))
                 .addGap(44, 44, 44))
         );
 
@@ -143,6 +151,27 @@ public class PatronSearchBook extends javax.swing.JDialog {
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         setTableData(); 
     }//GEN-LAST:event_searchButtonActionPerformed
+    private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_returnButtonActionPerformed
+
+    private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveButtonActionPerformed
+        int row = bookDetailsTable.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Please select a book", "Reserve a book", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+            int confirm = JOptionPane.showConfirmDialog(rootPane, "Reserve this book?", "Reserve a book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if (confirm == 0) {
+                System.out.println(bookDetailsTable.getValueAt(row, 5));
+                if (bookDetailsTable.getValueAt(row, 5).equals("RESERVED") || bookDetailsTable.getValueAt(row, 5).equals("WITHDRAWN")) {
+                    JOptionPane.showMessageDialog(rootPane, "The book is already RESERVED or WITHDRAWN");
+                    return;
+                }
+                reserveBook(row);
+            }
+        }
+    }//GEN-LAST:event_reserveButtonActionPerformed
     private void setTableData() {
         title = searchTextField.getText();
         try {
@@ -158,7 +187,7 @@ public class PatronSearchBook extends javax.swing.JDialog {
             }   
             
             data = new Object[i][columns().length];
-            DefaultTableModel dModel = new DefaultTableModel(data, columns());
+            dModel = new DefaultTableModel(data, columns());
             bookDetailsTable.setModel(dModel);
             
             cst.execute();
@@ -170,6 +199,7 @@ public class PatronSearchBook extends javax.swing.JDialog {
                 dModel.setValueAt(finalRs.getString("author_name"), i, 2);
                 dModel.setValueAt(finalRs.getString("year_of_publication"), i, 3);
                 dModel.setValueAt(finalRs.getString("place_of_publication"), i, 4);
+                dModel.setValueAt(finalRs.getString("current_status"), i, 5);
                 i++;
             } 
             
@@ -177,57 +207,31 @@ public class PatronSearchBook extends javax.swing.JDialog {
             System.out.println(ex.getMessage());
         }
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+    private void reserveBook(int row) {
+        int isbn = Integer.parseInt(dModel.getValueAt(row, 0).toString());
+        String bkTitle = dModel.getValueAt(row, 1).toString();
+//        System.out.println(isbn);
+//        System.out.println(bkTitle);
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PatronSearchBook.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PatronSearchBook.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PatronSearchBook.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PatronSearchBook.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PatronSearchBook dialog = new PatronSearchBook(new javax.swing.JFrame());
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+            cst = con.prepareCall("{CALL reserve(?,?,?)}");
+            cst.setInt(1, isbn);  // set IN parameter "p_book_no"
+            cst.setString(2, bkTitle);
+            cst.setString(3, patronId);
+            cst.execute();
+            setTableData();
+        } catch (SQLException ex) { System.out.println(ex.getMessage());}
     }
     private Object[] columns() {
-        Object[] ret = {"ISBN no.", "Title", "Author", "Published Year", "Place of Publication"};
+        Object[] ret = {"ISBN no.", "Title", "Author", "Published Year", "Place of Publication", "Status"};
         return ret;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable bookDetailsTable;
     private javax.swing.JLabel hintLabel;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton reserveButton;
     private javax.swing.JButton returnButton;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchTextField;
+    private javax.swing.JScrollPane tableScrollPane;
     // End of variables declaration//GEN-END:variables
 }

@@ -109,6 +109,7 @@ public class PatronMainScreen extends javax.swing.JFrame {
 
     private void searchBook_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBook_bActionPerformed
         // TODO add your handling code here:
+        new PatronSearchBook(this, patronId, con).setVisible(true);
     }//GEN-LAST:event_searchBook_bActionPerformed
 
     private void menu_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_logoutActionPerformed

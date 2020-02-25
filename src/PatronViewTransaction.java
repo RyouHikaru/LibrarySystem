@@ -2,7 +2,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleTypes;
 
@@ -22,6 +22,7 @@ public class PatronViewTransaction extends javax.swing.JDialog {
     private static CallableStatement cst;
     private static Connection con;
     private static String patronId;
+    private Object[][] data;
 
     /**
      * Creates new form PatronViewTransaction
@@ -31,9 +32,11 @@ public class PatronViewTransaction extends javax.swing.JDialog {
      */
     public PatronViewTransaction(java.awt.Frame parent, String patronId, Connection con) {
         super(parent);
+        
         this.patronId = patronId;
         this.con = con;
         initComponents();
+        autoUpdateTransaction();
         setTableData();
         
         this.getContentPane().setBackground(new java.awt.Color(242,223,167));
@@ -112,58 +115,69 @@ public class PatronViewTransaction extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_returnButtonActionPerformed
-
     private void setTableData() {
         try {
             cst = con.prepareCall("{CALL retrieveTransactions(?,?)}");
             cst.setInt(1, Integer.parseInt(patronId));  // set IN parameter "p_patron_no"
             cst.registerOutParameter(2, OracleTypes.CURSOR);
-//            System.out.println(patronId);
+            
             cst.execute();
-            
             ResultSet rs = ((OracleCallableStatement)cst).getCursor(2);
-            TableModel model = table.getModel();
-            
             int i = 0;
             while (rs.next()) {
-                model.setValueAt(rs.getString("accession_no"), i, 0);
-                model.setValueAt(rs.getString("isbn_no"), i, 1);
-                model.setValueAt(rs.getString("book_title"), i, 2);
-                model.setValueAt(rs.getString("status"), i, 3);
-                model.setValueAt(rs.getString("reservation_date"), i, 4);
-                model.setValueAt(rs.getString("reservation_date_exp"), i, 5);
-                model.setValueAt(rs.getString("date_borrowed"), i, 6);
-                model.setValueAt(rs.getString("due_date"), i, 7);
-                model.setValueAt(rs.getString("date_returned"), i, 8);
-                model.setValueAt(rs.getString("penalty_charge"), i, 9);
-                model.setValueAt(rs.getString("fine_status"), i, 10);
+                i++;
+            }
+            
+            data = new Object[i][columns().length];
+            DefaultTableModel dModel = new DefaultTableModel(data, columns());
+            table.setModel(dModel);
+            
+            cst.execute();
+            ResultSet finalRs = ((OracleCallableStatement)cst).getCursor(2);
+            i = 0;
+            while (finalRs.next()) {
+                dModel.setValueAt(finalRs.getString("accession_no"), i, 0);
+                dModel.setValueAt(finalRs.getString("isbn_no"), i, 1);
+                dModel.setValueAt(finalRs.getString("book_title"), i, 2);
+                dModel.setValueAt(finalRs.getString("status"), i, 3);
+                dModel.setValueAt(finalRs.getString("reservation_date"), i, 4);
+                dModel.setValueAt(finalRs.getString("reservation_date_exp"), i, 5);
+                dModel.setValueAt(finalRs.getString("date_borrowed"), i, 6);
+                dModel.setValueAt(finalRs.getString("due_date"), i, 7);
+                dModel.setValueAt(finalRs.getString("date_returned"), i, 8);
+                dModel.setValueAt(finalRs.getString("penalty_charge"), i, 9);
+                dModel.setValueAt(finalRs.getString("fine_status"), i, 10);
                 i++;
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }
-//    private String[] columns() {
-//        String[] ret = new String[] {
-//        "Accesssion no.",
-//        "ISBN no.:",
-//        "Patron no.",
-//        "Book Title",
-//        "Status",
-//        "Reserve Date",
-//        "Reserve Date Due",
-//        "Borrowed Date",
-//        "Due Date",
-//        "Return Date",
-//        "Penalty Charge",
-//        "Fine Status"};
-//        return ret;
-//    }
+    private void autoUpdateTransaction() {
+        try {
+            cst = con.prepareCall("{CALL autoupdatetransaction}");
+            cst.execute();
+            System.out.println("COMMIT");
+        } catch (SQLException ex) {}
+    }
+    private Object[] columns() {
+        Object[] ret = new String[] {
+        "Accesssion no.",
+        "ISBN no.:",
+        "Book Title",
+        "Status",
+        "Reserve Date",
+        "Reserve Date Due",
+        "Borrowed Date",
+        "Due Date",
+        "Return Date",
+        "Penalty Charge",
+        "Fine Status"};
+        return ret;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton returnButton;

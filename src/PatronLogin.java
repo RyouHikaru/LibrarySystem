@@ -21,6 +21,7 @@ public class PatronLogin extends javax.swing.JFrame {
     private static Connection con;
     private static ArrayList<String> idList;
     private static ArrayList<String> pwList;
+    private String patronId;
 
     /**
      * Creates new form PatronLogin
@@ -161,7 +162,6 @@ public class PatronLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void login1_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login1_bActionPerformed
-        // TODO add your handling code here:
         int key;
         String id = username1_tf.getText();
         String pw = passwrod1_tf.getText();
@@ -169,11 +169,18 @@ public class PatronLogin extends javax.swing.JFrame {
         if (idList.contains(id)) {
             key = idList.indexOf(id);
             if (pwList.get(key).equals(pw)) {
-                JOptionPane.showMessageDialog(rootPane, "Login Success", "Login", JOptionPane.INFORMATION_MESSAGE);
-                new PatronMainScreen().setVisible(true);
                 try {
-                    con.close();
-                } catch (SQLException ex) {}
+                    Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT patron_no FROM patron WHERE loginid = " + id);
+
+                    while (rs.next()) {
+                        patronId = rs.getString("patron_no");
+                    }
+                }
+                catch(SQLException e) {}
+                
+                JOptionPane.showMessageDialog(rootPane, "Login Success", "Login", JOptionPane.INFORMATION_MESSAGE);
+                new PatronMainScreen(patronId, con).setVisible(true);
                 this.dispose();
             }
             else {
@@ -235,6 +242,7 @@ public class PatronLogin extends javax.swing.JFrame {
         String username = "admin";
         String password = "123";
         con = DriverManager.getConnection(host, username, password);
+        con.setAutoCommit(true);
         System.out.println("Connected to database.");
         findInUsers();     
     }

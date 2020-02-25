@@ -1,5 +1,8 @@
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,12 +15,16 @@ import java.sql.SQLException;
  * @author Shanice Vergonia
  */
 public class PatronMainScreen extends javax.swing.JFrame {
-
+    private String patronId;
+    private static Connection con;
     /**
      * Creates new form PatronManScreen
      */
-    public PatronMainScreen() {
+    public PatronMainScreen(String patronId, Connection con) {
         initComponents();
+        
+        this.patronId = patronId;
+        this.con = con;
         this.setLocationRelativeTo(null);
     }
 
@@ -31,7 +38,7 @@ public class PatronMainScreen extends javax.swing.JFrame {
     private void initComponents() {
 
         welcome1_label = new javax.swing.JLabel();
-        viewTransactions_b = new javax.swing.JButton();
+        viewTransactionsButton = new javax.swing.JButton();
         searchBook_b = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -52,12 +59,17 @@ public class PatronMainScreen extends javax.swing.JFrame {
         getContentPane().add(welcome1_label);
         welcome1_label.setBounds(60, 100, 210, 70);
 
-        viewTransactions_b.setBackground(new java.awt.Color(242, 223, 167));
-        viewTransactions_b.setFont(new java.awt.Font("Nirmala UI", 1, 14)); // NOI18N
-        viewTransactions_b.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search1.png"))); // NOI18N
-        viewTransactions_b.setText("View Transactions");
-        getContentPane().add(viewTransactions_b);
-        viewTransactions_b.setBounds(70, 210, 180, 40);
+        viewTransactionsButton.setBackground(new java.awt.Color(242, 223, 167));
+        viewTransactionsButton.setFont(new java.awt.Font("Nirmala UI", 1, 14)); // NOI18N
+        viewTransactionsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search1.png"))); // NOI18N
+        viewTransactionsButton.setText("View Transactions");
+        viewTransactionsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewTransactionsButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(viewTransactionsButton);
+        viewTransactionsButton.setBounds(70, 210, 180, 40);
 
         searchBook_b.setFont(new java.awt.Font("Nirmala UI", 1, 14)); // NOI18N
         searchBook_b.setIcon(new javax.swing.ImageIcon(getClass().getResource("/book.png"))); // NOI18N
@@ -113,13 +125,17 @@ public class PatronMainScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_options1_jmenuActionPerformed
 
+    private void viewTransactionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewTransactionsButtonActionPerformed
+        new PatronViewTransaction(this, patronId, con).setVisible(true);
+    }//GEN-LAST:event_viewTransactionsButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem menu_logout;
     private javax.swing.JMenu options1_jmenu;
     private javax.swing.JButton searchBook_b;
-    private javax.swing.JButton viewTransactions_b;
+    private javax.swing.JButton viewTransactionsButton;
     private javax.swing.JLabel welcome1_label;
     // End of variables declaration//GEN-END:variables
 }

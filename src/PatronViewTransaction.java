@@ -58,7 +58,6 @@ public class PatronViewTransaction extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Transactions");
-        setPreferredSize(new java.awt.Dimension(1230, 530));
         setResizable(false);
 
         returnButton.setText("Return");
@@ -70,10 +69,7 @@ public class PatronViewTransaction extends javax.swing.JDialog {
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Accession no.", "ISBN no.", "Book title", "Status", "Reserve date", "Reserve date due", "Borrowed date", "Due date", "Return date", "Penalty charge", "Fine status"

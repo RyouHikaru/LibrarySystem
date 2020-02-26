@@ -167,7 +167,7 @@ public class LibrarianLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void login1_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login1_bActionPerformed
-        // TODO add your handling code here:
+
         int key;
         String id = username1_tf.getText();
         String pw = passwrod1_tf.getText();
@@ -176,10 +176,7 @@ public class LibrarianLogin extends javax.swing.JFrame {
             key = idList.indexOf(id);
             if (pwList.get(key).equals(pw)) {
                 JOptionPane.showMessageDialog(rootPane, "Login Success", "Login", JOptionPane.INFORMATION_MESSAGE);
-                new LibrarianMainScreen().setVisible(true);
-                try {
-                    con.close();
-                } catch (SQLException ex) {}
+                new LibMainScreen(id, con).setVisible(true);
                 this.dispose();
             }
             else {

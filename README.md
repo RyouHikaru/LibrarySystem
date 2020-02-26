@@ -9,6 +9,7 @@ Working functions:
 5. Auto-update reservation system.
 6. Librarian search and edit Books.
 7. Librarian search and edit Users.
+8. Added patron limit (2 transactions at a time)
 
 Note: auto-update functions are based on SYSDATE
 

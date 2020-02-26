@@ -112,14 +112,11 @@ END;
 create or replace PROCEDURE editbook
 (p_isbn IN NUMBER, p_booktitle IN VARCHAR2,
 p_copyno IN NUMBER,
-p_shelfid IN NUMBER, p_status IN VARCHAR2,
-p_loanhold_status IN DATE)
+p_shelfid IN NUMBER)
 IS
     v_booktitle book.book_title%TYPE := p_booktitle;
     v_copyno book.copy_no%TYPE := p_copyno;
     v_shelfid book.shelf_id%TYPE := p_shelfid;
-    v_status book.current_status%TYPE := p_status;
-    v_loanhold_date book.loan_hold_status_date%TYPE := p_loanhold_status;
 BEGIN 
     IF v_booktitle IS NULL THEN
         SELECT book_title INTO v_booktitle FROM book WHERE isbn_no = p_isbn;
@@ -130,19 +127,11 @@ BEGIN
     IF v_shelfid IS NULL THEN
         SELECT shelf_id INTO v_shelfid FROM book WHERE isbn_no = p_isbn;
     END IF;
-    IF v_status IS NULL THEN
-        SELECT current_status INTO v_status FROM book WHERE isbn_no = p_isbn;
-    END IF;
-    IF v_loanhold_date IS NULL THEN
-        SELECT loan_hold_status_date INTO v_loanhold_date FROM book WHERE isbn_no = p_isbn;
-    END IF;
 
     UPDATE book
     SET book_title = v_booktitle,
         copy_no = v_copyno,
-        shelf_id = v_shelfid,
-        current_status = v_status,
-        loan_hold_status_date = v_loanhold_date
+        shelf_id = v_shelfid
     WHERE isbn_no = p_isbn;
 END;
 /
@@ -319,3 +308,13 @@ begin
         End if;
     end loop;
 end;
+/
+CREATE OR REPLACE PROCEDURE retrieveusers
+(p_loginid IN users.loginid%TYPE, c_cursor OUT SYS_REFCURSOR)
+AS 
+BEGIN
+    OPEN c_cursor FOR
+        SELECT loginid, last_name, first_name, middle_name 
+        FROM users
+        WHERE loginid like p_loginid || '%';
+END;

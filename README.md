@@ -7,6 +7,8 @@ Working functions:
 3. Patron reserve Book
 4. Auto-update transaction.
 5. Auto-update reservation system.
+6. Librarian search and edit Books.
+7. Librarian search and edit Users.
 
 Note: auto-update functions are based on SYSDATE
 

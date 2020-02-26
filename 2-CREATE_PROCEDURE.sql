@@ -194,14 +194,14 @@ BEGIN
 
     SELECT accession_no INTO v_accession
     FROM transaction
-    WHERE isbn_no = p_isbn AND date_borrowed = p_date_borrowed AND status = 'WITHDRAWN';
+    WHERE isbn_no = p_isbn AND date_borrowed LIKE p_date_borrowed AND status = 'WITHDRAWN';
 
     SELECT penalty_charge INTO v_penalty
     FROM transaction
     WHERE accession_no = v_accession;
 
     UPDATE book
-    SET current_status = 'ON SHELF',
+    SET current_status = 'STORED',
         loan_hold_status_date = NULL
     WHERE isbn_no = p_isbn;
 
@@ -221,12 +221,16 @@ BEGIN
 END;
 /
 create or replace PROCEDURE withdrawbook -- LIBRARIAN ACCESS
-(p_loginid IN VARCHAR2, p_isbn IN NUMBER,
-p_date_borrowed IN DATE, p_status IN VARCHAR2)
+(p_loginid IN NUMBER, p_isbn IN NUMBER,
+p_date_borrowed IN DATE, p_status IN VARCHAR2,
+p_reservedate IN DATE)
 IS
     v_booktitle book.book_title%TYPE;
     v_patron_no patron.patron_no%TYPE;
+    v_reservedate DATE;
 BEGIN 
+    v_reservedate := p_reservedate;
+    
     SELECT book_title INTO v_booktitle
     FROM book
     WHERE isbn_no = p_isbn;
@@ -240,10 +244,18 @@ BEGIN
         loan_hold_status_date = p_date_borrowed
     WHERE isbn_no = p_isbn;
     
-    INSERT INTO transaction 
-    (accession_no, patron_no, isbn_no, book_title, status, date_borrowed, due_date)
-    VALUES(accession_no_seq.NEXTVAL, v_patron_no, p_isbn, v_booktitle, p_status,
-        p_date_borrowed, p_date_borrowed + 7);
+    IF v_reservedate IS NOT NULL THEN 
+        UPDATE transaction
+        SET status = 'WITHDRAWN',
+            date_borrowed = p_date_borrowed,
+            due_date = p_date_borrowed + 7
+        WHERE reservation_date LIKE p_reservedate AND book_title = v_booktitle AND isbn_no = p_isbn;
+    ELSE 
+        INSERT INTO transaction 
+        (accession_no, patron_no, isbn_no, book_title, status, date_borrowed, due_date)
+        VALUES(accession_no_seq.NEXTVAL, v_patron_no, p_isbn, v_booktitle, p_status,
+            p_date_borrowed, p_date_borrowed + 7);
+    END IF;        
 END;
 /
 create or replace PROCEDURE retrieveTransactions
@@ -317,4 +329,14 @@ BEGIN
         SELECT loginid, last_name, first_name, middle_name 
         FROM users
         WHERE loginid like p_loginid || '%';
+END;
+/
+CREATE OR REPLACE PROCEDURE getPatronTransactionCount
+(p_patron_no IN patron.patron_no%TYPE,
+ p_count OUT NUMBER)
+AS
+BEGIN
+    SELECT COUNT(*) INTO p_count
+    FROM transaction
+    WHERE patron_no = p_patron_no AND status IN ('RESERVED', 'WITHDRAWN');
 END;

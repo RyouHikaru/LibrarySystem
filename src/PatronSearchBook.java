@@ -3,6 +3,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleCallableStatement;
@@ -25,10 +26,13 @@ public class PatronSearchBook extends javax.swing.JDialog {
     private static String title;
     private DefaultTableModel dModel;
     private Object[][] data;
+    private int userLimit;
 
     /**
      * Creates new form PatronSearchBook
-     * @param parent
+     * @param parent the parent calling this class
+     * @param patronId the patron no. of the current logged on user
+     * @param con the connection to database
      */
     public PatronSearchBook(java.awt.Frame parent, String patronId, Connection con) {
         super(parent);
@@ -37,6 +41,7 @@ public class PatronSearchBook extends javax.swing.JDialog {
         this.patronId = patronId;
         initComponents();
         autoUpdateReservationSystem();
+        getUserLimit();
         
         this.getContentPane().setBackground(new java.awt.Color(242,223,167));
         this.setLocationRelativeTo(parent);
@@ -158,6 +163,11 @@ public class PatronSearchBook extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(rootPane, "Please select a book", "Reserve a book", JOptionPane.INFORMATION_MESSAGE);
         }
         else {
+            if (userLimit >= 2) {
+                JOptionPane.showMessageDialog(rootPane, "You can only have 2 kinds of transaction at a time.", "Maximum transaction reached", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Either RETURN a book or check your RESERVATION.", "Maximum transaction reached", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             int confirm = JOptionPane.showConfirmDialog(rootPane, "Reserve this book?", "Reserve a book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (confirm == 0) {
                 if (bookDetailsTable.getValueAt(row, 5).equals("RESERVED") || bookDetailsTable.getValueAt(row, 5).equals("WITHDRAWN")) {
@@ -206,8 +216,7 @@ public class PatronSearchBook extends javax.swing.JDialog {
     private void reserveBook(int row) {
         int isbn = Integer.parseInt(dModel.getValueAt(row, 0).toString());
         String bkTitle = dModel.getValueAt(row, 1).toString();
-//        System.out.println(isbn);
-//        System.out.println(bkTitle);
+
         try {
             cst = con.prepareCall("{CALL reserve(?,?,?)}");
             cst.setInt(1, isbn);  // set IN parameter "p_book_no"
@@ -227,6 +236,20 @@ public class PatronSearchBook extends javax.swing.JDialog {
             cst.execute();
             System.out.println("RESERVE COMMIT");
         } catch (SQLException ex) {}
+    }
+    private void getUserLimit() {
+        try {
+            cst = con.prepareCall("{CALL getPatronTransactionCount(?,?)}");
+            cst.setString(1, patronId);
+            cst.registerOutParameter(2, Types.INTEGER);
+            
+            cst.execute();
+            userLimit = cst.getInt(2);
+            System.out.println("User limit: " + userLimit);
+        }
+        catch(SQLException s) {
+            System.out.println(s.getMessage());
+        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable bookDetailsTable;

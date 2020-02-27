@@ -1,8 +1,11 @@
+package librarysystem;
+
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleCallableStatement;
@@ -18,24 +21,29 @@ import oracle.jdbc.OracleTypes;
  *
  * @author Ryou Hikaru
  */
-public class EditBook extends javax.swing.JDialog {
+public class PatronSearchBook extends javax.swing.JDialog {
     private static CallableStatement cst;
     private static String patronId;
     private static Connection con;
     private static String title;
     private DefaultTableModel dModel;
     private Object[][] data;
+    private int userLimit;
 
     /**
      * Creates new form PatronSearchBook
-     * @param parent
+     * @param parent the parent calling this class
+     * @param patronId the patron no. of the current logged on user
+     * @param con the connection to database
      */
-    public EditBook(java.awt.Frame parent, String patronId, Connection con) {
+    public PatronSearchBook(java.awt.Frame parent, String patronId, Connection con) {
         super(parent);
         
         this.con = con;
         this.patronId = patronId;
         initComponents();
+        autoUpdateReservationSystem();
+        getUserLimit();
         
         this.getContentPane().setBackground(new java.awt.Color(242,223,167));
         this.setLocationRelativeTo(parent);
@@ -54,10 +62,9 @@ public class EditBook extends javax.swing.JDialog {
         searchButton = new javax.swing.JButton();
         hintLabel = new javax.swing.JLabel();
         returnButton = new javax.swing.JButton();
-        addBookButton = new javax.swing.JButton();
+        reserveButton = new javax.swing.JButton();
         tableScrollPane = new javax.swing.JScrollPane();
         bookDetailsTable = new javax.swing.JTable();
-        editBookButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Search book");
@@ -79,10 +86,10 @@ public class EditBook extends javax.swing.JDialog {
             }
         });
 
-        addBookButton.setText("Add book");
-        addBookButton.addActionListener(new java.awt.event.ActionListener() {
+        reserveButton.setText("Reserve");
+        reserveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addBookButtonActionPerformed(evt);
+                reserveButtonActionPerformed(evt);
             }
         });
 
@@ -104,13 +111,6 @@ public class EditBook extends javax.swing.JDialog {
         });
         tableScrollPane.setViewportView(bookDetailsTable);
 
-        editBookButton.setText("Edit book");
-        editBookButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editBookButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,10 +121,8 @@ public class EditBook extends javax.swing.JDialog {
                     .addComponent(tableScrollPane)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(393, 393, 393)
-                        .addComponent(editBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(addBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(518, 518, 518)
+                        .addComponent(reserveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -147,8 +145,7 @@ public class EditBook extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(returnButton)
-                    .addComponent(addBookButton)
-                    .addComponent(editBookButton))
+                    .addComponent(reserveButton))
                 .addGap(44, 44, 44))
         );
 
@@ -162,19 +159,28 @@ public class EditBook extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_returnButtonActionPerformed
 
-    private void addBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookButtonActionPerformed
-        
-    }//GEN-LAST:event_addBookButtonActionPerformed
-
-    private void editBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBookButtonActionPerformed
+    private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveButtonActionPerformed
         int row = bookDetailsTable.getSelectedRow();
         if (row == -1) {
-            JOptionPane.showMessageDialog(rootPane, "Please select a book", "Update a book", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Please select a book", "Reserve a book", JOptionPane.INFORMATION_MESSAGE);
         }
         else {
-            new EditBookDialog(this, con, Integer.parseInt(bookDetailsTable.getValueAt(row, 0).toString())).setVisible(true);
+            if (userLimit >= 2) {
+                JOptionPane.showMessageDialog(rootPane, "You can only have 2 kinds of transaction at a time.", "Maximum transaction reached", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Either RETURN a book or check your RESERVATION.", "Maximum transaction reached", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            int confirm = JOptionPane.showConfirmDialog(rootPane, "Reserve this book?", "Reserve a book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if (confirm == 0) {
+                if (bookDetailsTable.getValueAt(row, 5).equals("RESERVED") || bookDetailsTable.getValueAt(row, 5).equals("WITHDRAWN")) {
+                    JOptionPane.showMessageDialog(rootPane, "The book is already RESERVED or WITHDRAWN");
+                    return;
+                }
+                reserveBook(row);
+                getUserLimit();
+            }
         }
-    }//GEN-LAST:event_editBookButtonActionPerformed
+    }//GEN-LAST:event_reserveButtonActionPerformed
     private void setTableData() {
         title = searchTextField.getText();
         try {
@@ -187,7 +193,7 @@ public class EditBook extends javax.swing.JDialog {
             int i = 0;
             while (rs.next()) {             
                 i++;
-            }   
+            }
             
             data = new Object[i][columns().length];
             dModel = new DefaultTableModel(data, columns());
@@ -210,15 +216,48 @@ public class EditBook extends javax.swing.JDialog {
             System.out.println(ex.getMessage());
         }
     }
+    private void reserveBook(int row) {
+        int isbn = Integer.parseInt(dModel.getValueAt(row, 0).toString());
+        String bkTitle = dModel.getValueAt(row, 1).toString();
+
+        try {
+            cst = con.prepareCall("{CALL reserve(?,?,?)}");
+            cst.setInt(1, isbn);  // set IN parameter "p_book_no"
+            cst.setString(2, bkTitle);
+            cst.setString(3, patronId);
+            cst.execute();
+            setTableData();
+        } catch (SQLException ex) { System.out.println(ex.getMessage());}
+    }
     private Object[] columns() {
         Object[] ret = {"ISBN no.", "Title", "Author", "Published Year", "Place of Publication", "Status"};
         return ret;
     }
+    private void autoUpdateReservationSystem() {
+        try {
+            cst = con.prepareCall("{CALL autoupdatereservation}");
+            cst.execute();
+            System.out.println("RESERVE COMMIT");
+        } catch (SQLException ex) {}
+    }
+    private void getUserLimit() {
+        try {
+            cst = con.prepareCall("{CALL getPatronTransactionCount(?,?)}");
+            cst.setString(1, patronId);
+            cst.registerOutParameter(2, Types.INTEGER);
+            
+            cst.execute();
+            userLimit = cst.getInt(2);
+            System.out.println("User limit: " + userLimit);
+        }
+        catch(SQLException s) {
+            System.out.println(s.getMessage());
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addBookButton;
     private javax.swing.JTable bookDetailsTable;
-    private javax.swing.JButton editBookButton;
     private javax.swing.JLabel hintLabel;
+    private javax.swing.JButton reserveButton;
     private javax.swing.JButton returnButton;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchTextField;

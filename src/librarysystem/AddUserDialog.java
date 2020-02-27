@@ -1,3 +1,5 @@
+package librarysystem;
+
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -14,22 +16,22 @@ import javax.swing.JOptionPane;
  *
  * @author Ryou Hikaru
  */
-public class EditUserDialog extends javax.swing.JDialog {
+public class AddUserDialog extends javax.swing.JDialog {
     private static CallableStatement cst;
-    private static String loginId;
+    private static int loginId;
     private static Connection con;
     /**
      * Creates new form EditUserDialog
      * @param parent the component calling this class
      * @param con the connection to database
-     * @param loginId id of the user to be edited
+     * @param loginid generated id number of the next user to register
      */
-    public EditUserDialog(java.awt.Dialog parent, Connection con, String loginId) {
+    public AddUserDialog(java.awt.Dialog parent, Connection con, int loginid) {
         super(parent);
         initComponents();
         
         this.con = con;
-        this.loginId = loginId;
+        this.loginId = loginid;
         editLabel.setText(editLabel.getText() + loginId);
         
         this.getContentPane().setBackground(new java.awt.Color(242,223,167));
@@ -47,19 +49,19 @@ public class EditUserDialog extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         firstNameLabel = new javax.swing.JLabel();
-        lastNameLabel2 = new javax.swing.JLabel();
+        passwordLabel = new javax.swing.JLabel();
         passwordField = new javax.swing.JPasswordField();
-        lastNameLabel1 = new javax.swing.JLabel();
-        firstnameTextField = new javax.swing.JTextField();
-        lastnameTextField = new javax.swing.JTextField();
         lastNameLabel = new javax.swing.JLabel();
+        firstnameTextField = new javax.swing.JTextField();
         middlenameTextField = new javax.swing.JTextField();
+        middlenameLabel = new javax.swing.JLabel();
+        lastnameTextField = new javax.swing.JTextField();
         editLabel = new javax.swing.JLabel();
-        saveButton = new javax.swing.JButton();
+        registerButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Edit user");
+        setTitle("Registration");
         setBackground(new java.awt.Color(242, 223, 167));
 
         jPanel1.setBackground(new java.awt.Color(248, 238, 210));
@@ -68,14 +70,14 @@ public class EditUserDialog extends javax.swing.JDialog {
         firstNameLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
         firstNameLabel.setText("First Name");
 
-        lastNameLabel2.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
-        lastNameLabel2.setText("New Password");
-
-        lastNameLabel1.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
-        lastNameLabel1.setText("Middle Name");
+        passwordLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
+        passwordLabel.setText("Password");
 
         lastNameLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
         lastNameLabel.setText("Last Name");
+
+        middlenameLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
+        middlenameLabel.setText("Middle Name");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -89,16 +91,16 @@ public class EditUserDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(firstnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lastNameLabel)
+                        .addComponent(middlenameLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lastnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(middlenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lastNameLabel1)
-                            .addComponent(lastNameLabel2))
+                            .addComponent(lastNameLabel)
+                            .addComponent(passwordLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(middlenameTextField)
+                            .addComponent(lastnameTextField)
                             .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
@@ -111,16 +113,16 @@ public class EditUserDialog extends javax.swing.JDialog {
                     .addComponent(firstNameLabel))
                 .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lastnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lastNameLabel))
+                    .addComponent(middlenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(middlenameLabel))
                 .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(middlenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lastNameLabel1))
+                    .addComponent(lastnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lastNameLabel))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lastNameLabel2))
+                    .addComponent(passwordLabel))
                 .addContainerGap())
         );
 
@@ -128,10 +130,10 @@ public class EditUserDialog extends javax.swing.JDialog {
         editLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         editLabel.setText("ID: ");
 
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
+        registerButton.setText("Register");
+        registerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
+                registerButtonActionPerformed(evt);
             }
         });
 
@@ -152,10 +154,10 @@ public class EditUserDialog extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(editLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,7 +168,7 @@ public class EditUserDialog extends javax.swing.JDialog {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(saveButton)
+                    .addComponent(registerButton)
                     .addComponent(cancelButton))
                 .addGap(35, 35, 35))
         );
@@ -174,30 +176,35 @@ public class EditUserDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        int id = Integer.parseInt(loginId);
+    private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
         String fn = firstnameTextField.getText();
         String ln = lastnameTextField.getText();
         String mn = middlenameTextField.getText();
         String pw = passwordField.getText();
         
+        if (fn.isEmpty() || ln.isEmpty() || pw.isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Only the Middle Name is optional.\nOther fields are required", "Missing fields", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
         try {
-            cst = con.prepareCall("{CALL edituser(?,?,?,?,?)}");
-            cst.setInt(1, id);
+            cst = con.prepareCall("{CALL adduser(?,?,?,?,?,?)}");
+            cst.setInt(1, loginId);
             cst.setString(2, pw);
             cst.setString(3, ln);
             cst.setString(4, fn);
             cst.setString(5, mn);
+            cst.setString(6, "Patron");
             
-            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Are you sure to update the user?", "Update details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Confirm registration?", "Register user", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (confirmation == 0) {
                 cst.execute();
-                JOptionPane.showMessageDialog(rootPane, "User details updated!", "Update user", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Registered succesfully!", "Register user", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             }
         }
         catch (SQLException e) {}
-    }//GEN-LAST:event_saveButtonActionPerformed
+    }//GEN-LAST:event_registerButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         this.dispose();
@@ -211,11 +218,11 @@ public class EditUserDialog extends javax.swing.JDialog {
     private javax.swing.JTextField firstnameTextField;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lastNameLabel;
-    private javax.swing.JLabel lastNameLabel1;
-    private javax.swing.JLabel lastNameLabel2;
     private javax.swing.JTextField lastnameTextField;
+    private javax.swing.JLabel middlenameLabel;
     private javax.swing.JTextField middlenameTextField;
     private javax.swing.JPasswordField passwordField;
-    private javax.swing.JButton saveButton;
+    private javax.swing.JLabel passwordLabel;
+    private javax.swing.JButton registerButton;
     // End of variables declaration//GEN-END:variables
 }

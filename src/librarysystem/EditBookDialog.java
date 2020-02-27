@@ -1,3 +1,5 @@
+package librarysystem;
+
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -57,7 +59,7 @@ public class EditBookDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Edit user");
+        setTitle("Edit book");
         setBackground(new java.awt.Color(242, 223, 167));
 
         jPanel1.setBackground(new java.awt.Color(248, 238, 210));

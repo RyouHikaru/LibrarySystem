@@ -1,9 +1,11 @@
+package librarysystem;
+
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleCallableStatement;
@@ -55,13 +57,12 @@ public class LibrarianManageUser extends javax.swing.JDialog {
         userDetailsTable = new javax.swing.JTable();
         returnButton = new javax.swing.JButton();
         editUserButton = new javax.swing.JButton();
+        addUserButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(null);
-        setPreferredSize(new java.awt.Dimension(860, 530));
 
         searchHint.setFont(new java.awt.Font("Nirmala UI", 1, 14)); // NOI18N
-        searchHint.setText("Search for user");
+        searchHint.setText("Search for user by Login ID");
 
         searchButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search1.png"))); // NOI18N
         searchButton.addActionListener(new java.awt.event.ActionListener() {
@@ -102,6 +103,13 @@ public class LibrarianManageUser extends javax.swing.JDialog {
             }
         });
 
+        addUserButton.setText("Add user");
+        addUserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addUserButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -112,13 +120,15 @@ public class LibrarianManageUser extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(searchHint, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(searchHint))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(searchButton))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(addUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(editUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(scrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 746, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(42, Short.MAX_VALUE))
@@ -137,7 +147,8 @@ public class LibrarianManageUser extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(returnButton)
-                    .addComponent(editUserButton))
+                    .addComponent(editUserButton)
+                    .addComponent(addUserButton))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
@@ -163,12 +174,31 @@ public class LibrarianManageUser extends javax.swing.JDialog {
             new EditUserDialog(this, con, id).setVisible(true);
         }
     }//GEN-LAST:event_editUserButtonActionPerformed
+
+    private void addUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserButtonActionPerformed
+        String sql = "SELECT id_seq2.NEXTVAL FROM dual";
+        int nextVal = 0;
+        synchronized(this) {
+            try {
+                PreparedStatement stmt = con.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    nextVal = rs.getInt(1);
+                }
+            } catch (SQLException ex) {System.out.println(ex.getMessage());}
+        }  
+        new AddUserDialog(this, con, nextVal).setVisible(true);
+    }//GEN-LAST:event_addUserButtonActionPerformed
     private Object[] searchUserColumns() {
         Object[] ret = {"Login ID", "Last Name", "First Name", "Middle Name"};
         return ret;
     }
     private void setTableData() {
         loginId = searchTextField.getText();
+        if (validNumber(loginId) == false) {
+            JOptionPane.showMessageDialog(rootPane, "Login ID can only be numbers", "Invalid input", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         try {
             cst = con.prepareCall("{CALL retrieveUsers(?, ?)}");
             cst.setString(1, loginId);
@@ -200,11 +230,23 @@ public class LibrarianManageUser extends javax.swing.JDialog {
             System.out.println(ex.getMessage());
         }
     }
-    private void editUser(int row) {
-        int loginid = Integer.parseInt(dModel.getValueAt(row, 0).toString());
+    private boolean validNumber(String str) {
+        boolean valid = true;
+        int length = str.length();
         
+        for (int i = 0; i < length; i++) {
+            if (str.charAt(i) >= 48 && str.charAt(i) <= 57) {
+                valid = true;
+            }
+            else {
+                valid = false; 
+                break;
+            }
+        }
+        return valid;   
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addUserButton;
     private javax.swing.JButton editUserButton;
     private javax.swing.JButton returnButton;
     private javax.swing.JScrollPane scrollPane;

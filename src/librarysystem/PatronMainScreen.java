@@ -1,3 +1,5 @@
+package librarysystem;
+
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -48,7 +50,7 @@ public class PatronMainScreen extends javax.swing.JFrame {
         setMaximumSize(null);
         setMinimumSize(null);
         setPreferredSize(new java.awt.Dimension(350, 540));
-        setSize(new java.awt.Dimension(341, 515));
+        setSize(new java.awt.Dimension(0, 0));
         getContentPane().setLayout(null);
 
         welcome1_label.setFont(new java.awt.Font("Nirmala UI", 1, 24)); // NOI18N

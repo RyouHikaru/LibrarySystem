@@ -1,3 +1,7 @@
+package librarysystem;
+
+
+import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,24 +20,24 @@ import javax.swing.JOptionPane;
  *
  * @author Shanice Vergonia
  */
-public class LibrarianLogin extends javax.swing.JFrame {
+public class PatronLogin extends javax.swing.JFrame {
     private static Connection con;
     private static ArrayList<String> idList;
     private static ArrayList<String> pwList;
+    private String patronId;
 
     /**
-     * Creates new form LibrarianLogin
+     * Creates new form PatronLogin
+     * @throws java.sql.SQLException
      */
-    public LibrarianLogin() {
+    public PatronLogin() throws SQLException {
         initComponents();
         
         idList = new ArrayList();
         pwList = new ArrayList();
-        try {
-            connectToDatabase(); 
-        }
-        catch(SQLException e) {}
+        connectToDatabase();
         
+        this.setPreferredSize(new Dimension(350, 540));
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     }
@@ -60,9 +64,10 @@ public class LibrarianLogin extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
         setLocation(new java.awt.Point(0, 0));
-        setPreferredSize(new java.awt.Dimension(360, 540));
+        setMaximumSize(null);
+        setPreferredSize(new java.awt.Dimension(350, 540));
         setResizable(false);
-        setSize(new java.awt.Dimension(360, 540));
+        setSize(new java.awt.Dimension(0, 0));
         getContentPane().setLayout(null);
 
         jLayeredPane1.setBackground(new java.awt.Color(242, 223, 167));
@@ -91,12 +96,6 @@ public class LibrarianLogin extends javax.swing.JFrame {
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/password.png"))); // NOI18N
         jLabel5.setText("jLabel5");
-
-        passwrod1_tf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwrod1_tfActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -142,14 +141,15 @@ public class LibrarianLogin extends javax.swing.JFrame {
 
         patronLogin_Label.setBackground(new java.awt.Color(0, 0, 0));
         patronLogin_Label.setFont(new java.awt.Font("Nirmala UI", 1, 36)); // NOI18N
-        patronLogin_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/librarian_login.png"))); // NOI18N
+        patronLogin_Label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/patron_login.png"))); // NOI18N
+        patronLogin_Label.setToolTipText("");
         patronLogin_Label.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         getContentPane().add(patronLogin_Label);
-        patronLogin_Label.setBounds(30, 50, 300, 50);
+        patronLogin_Label.setBounds(50, 50, 270, 50);
 
         change1_b.setBackground(new java.awt.Color(255, 255, 255));
         change1_b.setFont(new java.awt.Font("Nirmala UI", 0, 12)); // NOI18N
-        change1_b.setText("Change to Patron Login");
+        change1_b.setText("Change to Librarian login");
         change1_b.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 change1_bActionPerformed(evt);
@@ -161,13 +161,13 @@ public class LibrarianLogin extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/library-services4.jpg"))); // NOI18N
         jLabel2.setText("jLabel2");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(0, -170, 450, 820);
+        jLabel2.setBounds(0, 0, 450, 820);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void login1_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login1_bActionPerformed
-
         int key;
         String id = username1_tf.getText();
         String pw = passwrod1_tf.getText();
@@ -175,8 +175,18 @@ public class LibrarianLogin extends javax.swing.JFrame {
         if (idList.contains(id)) {
             key = idList.indexOf(id);
             if (pwList.get(key).equals(pw)) {
+                try {
+                    Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT patron_no FROM patron WHERE loginid = " + id);
+
+                    while (rs.next()) {
+                        patronId = rs.getString("patron_no");
+                    }
+                }
+                catch(SQLException e) {}
+                
                 JOptionPane.showMessageDialog(rootPane, "Login Success", "Login", JOptionPane.INFORMATION_MESSAGE);
-                new LibMainScreen(id, con).setVisible(true);
+                new PatronMainScreen(patronId, con).setVisible(true);
                 this.dispose();
             }
             else {
@@ -185,7 +195,7 @@ public class LibrarianLogin extends javax.swing.JFrame {
             }
         } 
         else {
-            JOptionPane.showMessageDialog(rootPane, "No such librarian", "Login Failed", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "No such user", "Login Failed", JOptionPane.INFORMATION_MESSAGE);
             username1_tf.setText("");
             passwrod1_tf.setText("");
         }
@@ -193,30 +203,59 @@ public class LibrarianLogin extends javax.swing.JFrame {
 
     private void username1_tfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_username1_tfActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_username1_tfActionPerformed
 
     private void change1_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_change1_bActionPerformed
-        try {
-            new PatronLogin().setVisible(true);
-        } catch (SQLException ex) {}
+        new LibrarianLogin().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_change1_bActionPerformed
 
-    private void passwrod1_tfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwrod1_tfActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passwrod1_tfActionPerformed
-   
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) throws SQLException {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(PatronLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(PatronLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(PatronLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(PatronLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        try {
+            new PatronLogin().setVisible(true);
+        }
+        catch(SQLException e) {}
+    }
     public static void connectToDatabase() throws SQLException {
         String host = "jdbc:oracle:thin:@localhost:1521:orcl";
         String username = "admin";
         String password = "123";
         con = DriverManager.getConnection(host, username, password);
+        con.setAutoCommit(true);
         System.out.println("Connected to database.");
         findInUsers();     
     }
     public static void findInUsers() {
         try {
-            String query = "SELECT * FROM users WHERE user_type = 'Librarian'";
+            String query = "SELECT * FROM users";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             

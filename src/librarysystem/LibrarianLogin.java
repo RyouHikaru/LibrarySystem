@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import librarysystem.PatronLogin;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

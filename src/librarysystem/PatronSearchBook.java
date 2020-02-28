@@ -172,7 +172,7 @@ public class PatronSearchBook extends javax.swing.JDialog {
             }
             int confirm = JOptionPane.showConfirmDialog(rootPane, "Reserve this book?", "Reserve a book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (confirm == 0) {
-                if (bookDetailsTable.getValueAt(row, 6).equals("RESERVED") || bookDetailsTable.getValueAt(row, 6).equals("WITHDRAWN")) {
+                if (bookDetailsTable.getValueAt(row, 7).equals("RESERVED") || bookDetailsTable.getValueAt(row, 7).equals("WITHDRAWN")) {
                     JOptionPane.showMessageDialog(rootPane, "The book is already RESERVED or WITHDRAWN");
                     return;
                 }

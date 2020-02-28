@@ -141,7 +141,7 @@ public class LibrarianMainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_options1_jmenuActionPerformed
 
     private void manageTransacation_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageTransacation_bActionPerformed
-
+        new LibrarianManageTransaction(this, patronId, con).setVisible(true);
     }//GEN-LAST:event_manageTransacation_bActionPerformed
 
     private void manageUsers_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageUsers_bActionPerformed
@@ -149,7 +149,7 @@ public class LibrarianMainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_manageUsers_bActionPerformed
 
     private void manageBooks_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageBooks_bActionPerformed
-        new EditBook(this, "", con).setVisible(true);
+        new LibrarianManageBook(this, "", con).setVisible(true);
     }//GEN-LAST:event_manageBooks_bActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

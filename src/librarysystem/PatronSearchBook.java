@@ -98,11 +98,11 @@ public class PatronSearchBook extends javax.swing.JDialog {
 
             },
             new String [] {
-                "ISBN no.", "Title", "Author", "Published Year", "Place of Publication", "Status"
+                "ISBN no.", "Title", "Copy no.", "Author", "Shelf ID", "Published Year", "Place of Publication", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -172,7 +172,7 @@ public class PatronSearchBook extends javax.swing.JDialog {
             }
             int confirm = JOptionPane.showConfirmDialog(rootPane, "Reserve this book?", "Reserve a book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (confirm == 0) {
-                if (bookDetailsTable.getValueAt(row, 5).equals("RESERVED") || bookDetailsTable.getValueAt(row, 5).equals("WITHDRAWN")) {
+                if (bookDetailsTable.getValueAt(row, 6).equals("RESERVED") || bookDetailsTable.getValueAt(row, 6).equals("WITHDRAWN")) {
                     JOptionPane.showMessageDialog(rootPane, "The book is already RESERVED or WITHDRAWN");
                     return;
                 }
@@ -205,10 +205,12 @@ public class PatronSearchBook extends javax.swing.JDialog {
             while (finalRs.next()) {
                 dModel.setValueAt(finalRs.getString("isbn_no"), i, 0);
                 dModel.setValueAt(finalRs.getString("book_title"), i, 1);
-                dModel.setValueAt(finalRs.getString("author_name"), i, 2);
-                dModel.setValueAt(finalRs.getString("year_of_publication"), i, 3);
-                dModel.setValueAt(finalRs.getString("place_of_publication"), i, 4);
-                dModel.setValueAt(finalRs.getString("current_status"), i, 5);
+                dModel.setValueAt(finalRs.getString("copy_no"), i, 2);
+                dModel.setValueAt(finalRs.getString("shelf_id"), i, 3);
+                dModel.setValueAt(finalRs.getString("author_name"), i, 4);
+                dModel.setValueAt(finalRs.getString("year_of_publication"), i, 5);
+                dModel.setValueAt(finalRs.getString("place_of_publication"), i, 6);
+                dModel.setValueAt(finalRs.getString("current_status"), i, 7);
                 i++;
             } 
             
@@ -218,19 +220,22 @@ public class PatronSearchBook extends javax.swing.JDialog {
     }
     private void reserveBook(int row) {
         int isbn = Integer.parseInt(dModel.getValueAt(row, 0).toString());
+        String copyno = dModel.getValueAt(row, 2).toString();
         String bkTitle = dModel.getValueAt(row, 1).toString();
 
         try {
-            cst = con.prepareCall("{CALL reserve(?,?,?)}");
+            cst = con.prepareCall("{CALL reserve(?,?,?,?)}");
             cst.setInt(1, isbn);  // set IN parameter "p_book_no"
-            cst.setString(2, bkTitle);
-            cst.setString(3, patronId);
+            cst.setString(2, copyno);
+            cst.setString(3, bkTitle);
+            cst.setString(4, patronId);
             cst.execute();
+            JOptionPane.showMessageDialog(rootPane, "Reserved successfully!", "Resevation", JOptionPane.INFORMATION_MESSAGE);
             setTableData();
         } catch (SQLException ex) { System.out.println(ex.getMessage());}
     }
     private Object[] columns() {
-        Object[] ret = {"ISBN no.", "Title", "Author", "Published Year", "Place of Publication", "Status"};
+        Object[] ret = {"ISBN no.", "Title", "Copy no.", "Shelf ID", "Author", "Published Year", "Place of Publication", "Status"};
         return ret;
     }
     private void autoUpdateReservationSystem() {

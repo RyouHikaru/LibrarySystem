@@ -111,15 +111,8 @@
       <SubComponents>
         <Component class="javax.swing.JTable" name="bookDetailsTable">
           <Properties>
-            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="6" rowCount="0">
-                <Column editable="false" title="ISBN no." type="java.lang.Object"/>
-                <Column editable="false" title="Title" type="java.lang.Object"/>
-                <Column editable="false" title="Author" type="java.lang.Object"/>
-                <Column editable="false" title="Published Year" type="java.lang.Object"/>
-                <Column editable="false" title="Place of Publication" type="java.lang.Object"/>
-                <Column editable="false" title="Status" type="java.lang.Object"/>
-              </Table>
+            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;ISBN no.&quot;, &quot;Title&quot;, &quot;Copy no.&quot;, &quot;Author&quot;, &quot;Shelf ID&quot;, &quot;Published Year&quot;, &quot;Place of Publication&quot;, &quot;Status&quot;&#xa;    }&#xa;) {&#xa;    boolean[] canEdit = new boolean [] {&#xa;        false, false, false, false, false, false, false, false&#xa;    };&#xa;&#xa;    public boolean isCellEditable(int rowIndex, int columnIndex) {&#xa;        return canEdit [columnIndex];&#xa;    }&#xa;}" type="code"/>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">

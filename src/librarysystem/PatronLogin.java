@@ -76,6 +76,7 @@ public class PatronLogin extends javax.swing.JFrame {
         jLayeredPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLayeredPane1.setOpaque(true);
 
+        username1_tf.setText("20000");
         username1_tf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 username1_tfActionPerformed(evt);
@@ -246,7 +247,7 @@ public class PatronLogin extends javax.swing.JFrame {
     }
     public static void connectToDatabase() throws SQLException {
         String host = "jdbc:oracle:thin:@localhost:1521:orcl";
-        String username = "admin";
+        String username = "ryouhikaru";
         String password = "123";
         con = DriverManager.getConnection(host, username, password);
         con.setAutoCommit(true);

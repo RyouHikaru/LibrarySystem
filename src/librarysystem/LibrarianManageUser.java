@@ -58,6 +58,7 @@ public class LibrarianManageUser extends javax.swing.JDialog {
         returnButton = new javax.swing.JButton();
         editUserButton = new javax.swing.JButton();
         addUserButton = new javax.swing.JButton();
+        deleteUserButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -110,27 +111,35 @@ public class LibrarianManageUser extends javax.swing.JDialog {
             }
         });
 
+        deleteUserButton.setText("Delete user");
+        deleteUserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUserButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(editUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(deleteUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(searchHint))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(searchButton))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(addUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(editUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(scrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 746, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 746, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(42, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -148,8 +157,9 @@ public class LibrarianManageUser extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(returnButton)
                     .addComponent(editUserButton)
-                    .addComponent(addUserButton))
-                .addContainerGap(37, Short.MAX_VALUE))
+                    .addComponent(addUserButton)
+                    .addComponent(deleteUserButton))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -189,6 +199,29 @@ public class LibrarianManageUser extends javax.swing.JDialog {
         }  
         new AddUserDialog(this, con, nextVal).setVisible(true);
     }//GEN-LAST:event_addUserButtonActionPerformed
+
+    private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
+        int row = userDetailsTable.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Please select a user", "Delete User", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+            String id = userDetailsTable.getValueAt(row, 0).toString();
+            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Delete this user?", "Delete User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (confirmation == 0) {
+                try {
+                    cst = con.prepareCall("{CALL deleteuser(?)}");
+                    cst.setInt(1, Integer.parseInt(id));
+                    cst.execute();
+                    JOptionPane.showMessageDialog(rootPane, "User " + id + " deleted");
+                } catch (SQLException ex) {}
+                setTableData();
+            }
+            else {
+                return;
+            }
+        }
+    }//GEN-LAST:event_deleteUserButtonActionPerformed
     private Object[] searchUserColumns() {
         Object[] ret = {"Login ID", "Last Name", "First Name", "Middle Name"};
         return ret;
@@ -247,6 +280,7 @@ public class LibrarianManageUser extends javax.swing.JDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addUserButton;
+    private javax.swing.JButton deleteUserButton;
     private javax.swing.JButton editUserButton;
     private javax.swing.JButton returnButton;
     private javax.swing.JScrollPane scrollPane;

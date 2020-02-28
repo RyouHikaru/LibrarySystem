@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import librarysystem.PatronLogin;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -76,6 +75,7 @@ public class LibrarianLogin extends javax.swing.JFrame {
         jLayeredPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLayeredPane1.setOpaque(true);
 
+        username1_tf.setText("21050");
         username1_tf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 username1_tfActionPerformed(evt);
@@ -212,7 +212,7 @@ public class LibrarianLogin extends javax.swing.JFrame {
    
     public static void connectToDatabase() throws SQLException {
         String host = "jdbc:oracle:thin:@localhost:1521:orcl";
-        String username = "admin";
+        String username = "ryouhikaru";
         String password = "123";
         con = DriverManager.getConnection(host, username, password);
         System.out.println("Connected to database.");

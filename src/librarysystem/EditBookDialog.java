@@ -49,11 +49,13 @@ public class EditBookDialog extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         titleLabel = new javax.swing.JLabel();
-        shelfIdlabel = new javax.swing.JLabel();
+        shelfLabel = new javax.swing.JLabel();
         titleField = new javax.swing.JTextField();
-        copyField = new javax.swing.JTextField();
-        copynoLabel = new javax.swing.JLabel();
-        shelfField = new javax.swing.JTextField();
+        shelfField = new javax.swing.JComboBox();
+        yearLabel = new javax.swing.JLabel();
+        yearField = new javax.swing.JTextField();
+        placeLabel = new javax.swing.JLabel();
+        placeField = new javax.swing.JTextField();
         editLabel = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
@@ -68,49 +70,71 @@ public class EditBookDialog extends javax.swing.JDialog {
         titleLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
         titleLabel.setText("Title");
 
-        shelfIdlabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
-        shelfIdlabel.setText("Shelf ID");
+        shelfLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
+        shelfLabel.setText("Shelf");
 
-        copynoLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
-        copynoLabel.setText("Copy no.");
+        shelfField.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"Fiction", "Non-Fiction", "Computer Science, Information and General Works", "Social Sciences", "Arts and Recreation", "History and Geography", "Literature", "Language", "Philosophy and Psychology", "Pure Science"}));
+
+        yearLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
+        yearLabel.setText("Year Published");
+
+        placeLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
+        placeLabel.setText("Place of Publication");
+
+        placeField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                placeFieldActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(40, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(titleLabel)
-                    .addComponent(copynoLabel)
-                    .addComponent(shelfIdlabel))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(shelfField, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                    .addComponent(copyField)
-                    .addComponent(titleField))
+                    .addComponent(yearLabel)
+                    .addComponent(shelfLabel)
+                    .addComponent(titleLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(shelfField, 0, 179, Short.MAX_VALUE)
+                        .addComponent(titleField))
+                    .addComponent(yearField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(placeLabel)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(placeField)
+                    .addContainerGap()))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(titleLabel)
-                        .addGap(29, 29, 29))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(titleField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)))
+                .addGap(16, 16, 16)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(copynoLabel)
-                    .addComponent(copyField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                    .addComponent(titleField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titleLabel))
+                .addGap(16, 16, 16)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(shelfIdlabel)
-                    .addComponent(shelfField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
+                    .addComponent(shelfField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(shelfLabel))
+                .addGap(17, 17, 17)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(yearLabel)
+                    .addComponent(yearField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(76, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(171, 171, 171)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(placeLabel)
+                        .addComponent(placeField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(22, Short.MAX_VALUE)))
         );
 
         editLabel.setFont(new java.awt.Font("Nirmala UI", 1, 20)); // NOI18N
@@ -136,15 +160,20 @@ public class EditBookDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(27, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(editLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(79, 79, 79)
+                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,11 +182,11 @@ public class EditBookDialog extends javax.swing.JDialog {
                 .addComponent(editLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(cancelButton))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
 
         pack();
@@ -165,22 +194,24 @@ public class EditBookDialog extends javax.swing.JDialog {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         String title = titleField.getText();
-        String copynum = copyField.getText();
-        String shelfid = shelfField.getText();
+        String shelf = shelfField.getSelectedItem().toString();
+        String year = yearField.getText();
+        String place = placeField.getText();
         
-        if (validNumber(copynum) == false || validNumber(shelfid) == false) {
-            JOptionPane.showMessageDialog(rootPane, "Copy no. and Shelf ID can only be numeric", "Invalid numeric input", JOptionPane.INFORMATION_MESSAGE);
+        if (validNumber(year) == false) {
+            JOptionPane.showMessageDialog(rootPane, "Year can only be numeric", "Invalid numeric input", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         
         try {
-            cst = con.prepareCall("{CALL editbook(?,?,?,?)}");
+            cst = con.prepareCall("{CALL editbookandwrittenwork(?,?,?,?,?)}");
             cst.setInt(1, isbn);
             cst.setString(2, title);
-            cst.setString(3, copynum);
-            cst.setString(4, shelfid);
+            cst.setString(3, shelf);
+            cst.setString(4, year);
+            cst.setString(5, place);
             
-            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Are you sure to update thsi book?", "Update details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Are you sure to update this book?", "Update details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (confirmation == 0) {
                 cst.execute();
                 JOptionPane.showMessageDialog(rootPane, "Book details updated!", "Update book", JOptionPane.INFORMATION_MESSAGE);
@@ -195,6 +226,10 @@ public class EditBookDialog extends javax.swing.JDialog {
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void placeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placeFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_placeFieldActionPerformed
   
     private boolean validNumber(String str) {
         boolean valid = true;
@@ -213,14 +248,16 @@ public class EditBookDialog extends javax.swing.JDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JTextField copyField;
-    private javax.swing.JLabel copynoLabel;
     private javax.swing.JLabel editLabel;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField placeField;
+    private javax.swing.JLabel placeLabel;
     private javax.swing.JButton saveButton;
-    private javax.swing.JTextField shelfField;
-    private javax.swing.JLabel shelfIdlabel;
+    private javax.swing.JComboBox shelfField;
+    private javax.swing.JLabel shelfLabel;
     private javax.swing.JTextField titleField;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JTextField yearField;
+    private javax.swing.JLabel yearLabel;
     // End of variables declaration//GEN-END:variables
 }

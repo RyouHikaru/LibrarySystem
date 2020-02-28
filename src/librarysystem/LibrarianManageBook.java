@@ -61,6 +61,7 @@ public class LibrarianManageBook extends javax.swing.JDialog {
         tableScrollPane = new javax.swing.JScrollPane();
         bookDetailsTable = new javax.swing.JTable();
         editBookButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Search book");
@@ -114,27 +115,37 @@ public class LibrarianManageBook extends javax.swing.JDialog {
             }
         });
 
+        deleteButton.setText("Delete book");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tableScrollPane)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(393, 393, 393)
-                        .addComponent(editBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(addBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(hintLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(searchButton)))
-                .addContainerGap(46, Short.MAX_VALUE))
+                        .addComponent(searchButton))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(addBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(editBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 744, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,6 +162,7 @@ public class LibrarianManageBook extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(returnButton)
                     .addComponent(addBookButton)
+                    .addComponent(deleteButton)
                     .addComponent(editBookButton))
                 .addGap(44, 44, 44))
         );
@@ -175,9 +187,33 @@ public class LibrarianManageBook extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(rootPane, "Please select a book", "Update a book", JOptionPane.INFORMATION_MESSAGE);
         }
         else {
-            new EditBookDialog(this, con, Integer.parseInt(bookDetailsTable.getValueAt(row, 0).toString())).setVisible(true);
+            String isbn = bookDetailsTable.getValueAt(row, 0).toString();
+            new EditBookDialog(this, con, Integer.parseInt(isbn)).setVisible(true);
         }
     }//GEN-LAST:event_editBookButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        int row = bookDetailsTable.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Please select a book", "Delete Book", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+            int isbn = Integer.parseInt(bookDetailsTable.getValueAt(row, 0).toString());
+            int copyno = Integer.parseInt(bookDetailsTable.getValueAt(row, 2).toString());
+            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Delete this book?", "Delete Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (confirmation == 0) {
+                try {
+                    cst = con.prepareCall("{CALL deletebook(?,?)}");
+                    cst.setInt(1, isbn);
+                    cst.setInt(2, copyno);
+                    cst.execute();
+                    JOptionPane.showMessageDialog(rootPane, "Book deleted");
+                    setTableData();
+                }
+                catch(SQLException ex) {System.out.println(ex.getMessage());}
+            }
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
     private void setTableData() {
         title = searchTextField.getText();
         try {
@@ -222,6 +258,7 @@ public class LibrarianManageBook extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBookButton;
     private javax.swing.JTable bookDetailsTable;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JButton editBookButton;
     private javax.swing.JLabel hintLabel;
     private javax.swing.JButton returnButton;

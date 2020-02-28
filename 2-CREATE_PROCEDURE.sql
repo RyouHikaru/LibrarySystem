@@ -101,14 +101,32 @@ END;
 create or replace PROCEDURE deleteUser
 (p_loginId IN NUMBER)
 IS
+    v_patron patron.patron_no%TYPE;
+    cursor cur is 
+    select book_title 
+    from transaction
+    where patron_no = (SELECT patron_no from patron
+                    where loginid = p_loginid);
 BEGIN 
+    for c in cur loop
+        update book
+        set current_status = 'STORED'
+        where book_title = c.book_title;
+    end loop;    
+        
+    select patron_no into v_patron
+    from patron
+    where loginid = p_loginid;
+    
+    DELETE FROM transaction
+    WHERE patron_no = v_patron;
+    
     DELETE FROM patron
     WHERE loginid = p_loginid;
     
     DELETE FROM users
     WHERE loginid = p_loginid;
 END;
-
 /
 create or replace PROCEDURE editUser
 (p_loginId IN NUMBER, p_password IN VARCHAR2,
@@ -234,18 +252,19 @@ BEGIN
     SELECT patron_no INTO v_patron_no
     FROM patron
     WHERE loginid = p_loginid;
-
-    SELECT accession_no INTO v_acc
-    FROM transaction
-    WHERE reservation_date LIKE v_reservedate AND book_title = v_booktitle 
-        AND isbn_no = p_isbn AND copy_no = p_copy_no;
     
     UPDATE book
     SET current_status = p_status,
         loan_hold_status_date = v_dateborrowed
+        
     WHERE isbn_no = p_isbn AND copy_no = p_copy_no;
 
     IF v_reservedate IS NOT NULL THEN 
+        SELECT accession_no INTO v_acc
+        FROM transaction
+        WHERE reservation_date LIKE v_reservedate AND book_title = v_booktitle 
+        AND isbn_no = p_isbn AND copy_no = p_copy_no;
+        
         UPDATE transaction
         SET status = p_status,
             date_borrowed = v_dateborrowed,

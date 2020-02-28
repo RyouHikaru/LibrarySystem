@@ -246,7 +246,7 @@ public class PatronLogin extends javax.swing.JFrame {
     }
     public static void connectToDatabase() throws SQLException {
         String host = "jdbc:oracle:thin:@localhost:1521:orcl";
-        String username = "admin";
+        String username = "ryouhikaru";
         String password = "123";
         con = DriverManager.getConnection(host, username, password);
         con.setAutoCommit(true);

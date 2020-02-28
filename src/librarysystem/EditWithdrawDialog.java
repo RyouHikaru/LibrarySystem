@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  *
  * @author Ryou Hikaru
  */
-public class AddTransactionDialog extends javax.swing.JDialog {
+public class EditWithdrawDialog extends javax.swing.JDialog {
     private static CallableStatement cst;
     private static String accession;
     private static Connection con;
@@ -28,7 +28,7 @@ public class AddTransactionDialog extends javax.swing.JDialog {
      * @param con the connection to database
      * @param accession id of the user to be edited
      */
-    public AddTransactionDialog(java.awt.Dialog parent, Connection con, String accession) {
+    public EditWithdrawDialog(java.awt.Dialog parent, Connection con, String accession) {
         super(parent);
         status = new String[] {"WITHDRAWN", "RETURNED"};
         
@@ -138,7 +138,7 @@ public class AddTransactionDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(statusLabel)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         addLabel.setFont(new java.awt.Font("Nirmala UI", 1, 20)); // NOI18N
@@ -198,20 +198,27 @@ public class AddTransactionDialog extends javax.swing.JDialog {
         String rdate = reservedateField.getText();
         String s = statusField.getSelectedItem().toString();
         
+        System.out.println(id);
+        System.out.println(isbn);
+        System.out.println(copyno);
+        System.out.println("");
+        System.out.println(s);
+        System.out.println(rdate);
+        
         try {
             cst = con.prepareCall("{CALL withdrawbook(?,?,?,?,?,?)}");
             cst.setInt(1, id);
             cst.setString(2, isbn);
             cst.setString(3, copyno);
             cst.setString(4, null);
-            cst.setString(6, rdate);
             cst.setString(5, s);
+            cst.setString(6, rdate);
             
-            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Confirm adding transaction?", "Add transaction", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Confirm edit transaction?", "Edit transaction", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 //            System.out.println("confirm: " + confirmation);
             if (confirmation == 0) {
                 cst.execute();
-                JOptionPane.showMessageDialog(rootPane, "Transaction complete!", "Add transaction", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Transaction complete!", "Edit transaction", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             }
         }

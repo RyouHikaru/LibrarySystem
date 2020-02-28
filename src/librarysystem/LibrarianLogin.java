@@ -75,6 +75,7 @@ public class LibrarianLogin extends javax.swing.JFrame {
         jLayeredPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLayeredPane1.setOpaque(true);
 
+        username1_tf.setText("21050");
         username1_tf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 username1_tfActionPerformed(evt);

@@ -176,10 +176,15 @@ public class LibrarianManageTransaction extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(rootPane, "Please select a transaction", "Update transaction", JOptionPane.INFORMATION_MESSAGE);
         }
         else {
-            String isbn = table.getValueAt(row, 0).toString();
-            String copyno = table.getValueAt(row, 2).toString();
-            JOptionPane.showMessageDialog(rootPane, isbn + " " + copyno);
-            // new EditTransactionDialog(this, isbn, copyno, con).setVisible(true);
+            String acc = table.getValueAt(row, 0).toString();
+            String s = table.getValueAt(row, 5).toString();
+            
+            if (s.equals("RESERVED")) {
+                new EditWithdrawDialog(this, con, acc).setVisible(true);
+            }
+            else {
+                new EditReturnDialog(this, con, acc).setVisible(true);
+            }
         }
     }//GEN-LAST:event_editButtonActionPerformed
 

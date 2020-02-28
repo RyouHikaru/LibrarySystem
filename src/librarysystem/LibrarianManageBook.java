@@ -20,7 +20,7 @@ import oracle.jdbc.OracleTypes;
  *
  * @author Ryou Hikaru
  */
-public class EditBook extends javax.swing.JDialog {
+public class LibrarianManageBook extends javax.swing.JDialog {
     private static CallableStatement cst;
     private static String patronId;
     private static Connection con;
@@ -33,7 +33,7 @@ public class EditBook extends javax.swing.JDialog {
      * Creates new form PatronSearchBook
      * @param parent
      */
-    public EditBook(java.awt.Frame parent, String patronId, Connection con) {
+    public LibrarianManageBook(java.awt.Frame parent, String patronId, Connection con) {
         super(parent);
         
         this.con = con;
@@ -94,11 +94,11 @@ public class EditBook extends javax.swing.JDialog {
 
             },
             new String [] {
-                "ISBN no.", "Title", "Author", "Published Year", "Place of Publication", "Status"
+                "ISBN no.", "Title", "Copy no.", "Author", "Shelf ID", "Published Year", "Place of Publication", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -166,7 +166,7 @@ public class EditBook extends javax.swing.JDialog {
     }//GEN-LAST:event_returnButtonActionPerformed
 
     private void addBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookButtonActionPerformed
-        
+        new AddBookDialog(this, con).setVisible(true);
     }//GEN-LAST:event_addBookButtonActionPerformed
 
     private void editBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBookButtonActionPerformed
@@ -190,7 +190,7 @@ public class EditBook extends javax.swing.JDialog {
             int i = 0;
             while (rs.next()) {             
                 i++;
-            }   
+            }
             
             data = new Object[i][columns().length];
             dModel = new DefaultTableModel(data, columns());
@@ -202,10 +202,12 @@ public class EditBook extends javax.swing.JDialog {
             while (finalRs.next()) {
                 dModel.setValueAt(finalRs.getString("isbn_no"), i, 0);
                 dModel.setValueAt(finalRs.getString("book_title"), i, 1);
-                dModel.setValueAt(finalRs.getString("author_name"), i, 2);
-                dModel.setValueAt(finalRs.getString("year_of_publication"), i, 3);
-                dModel.setValueAt(finalRs.getString("place_of_publication"), i, 4);
-                dModel.setValueAt(finalRs.getString("current_status"), i, 5);
+                dModel.setValueAt(finalRs.getString("copy_no"), i, 2);
+                dModel.setValueAt(finalRs.getString("shelf_id"), i, 3);
+                dModel.setValueAt(finalRs.getString("author_name"), i, 4);
+                dModel.setValueAt(finalRs.getString("year_of_publication"), i, 5);
+                dModel.setValueAt(finalRs.getString("place_of_publication"), i, 6);
+                dModel.setValueAt(finalRs.getString("current_status"), i, 7);
                 i++;
             } 
             
@@ -214,7 +216,7 @@ public class EditBook extends javax.swing.JDialog {
         }
     }
     private Object[] columns() {
-        Object[] ret = {"ISBN no.", "Title", "Author", "Published Year", "Place of Publication", "Status"};
+        Object[] ret = {"ISBN no.", "Title", "Copy no.", "Shelf ID", "Author", "Published Year", "Place of Publication", "Status"};
         return ret;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

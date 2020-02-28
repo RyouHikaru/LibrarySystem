@@ -17,21 +17,22 @@ import javax.swing.JOptionPane;
  *
  * @author Ryou Hikaru
  */
-public class AddTransactionDialog extends javax.swing.JDialog {
+public class EditReturnDialog extends javax.swing.JDialog {
     private static CallableStatement cst;
     private static String accession;
     private static Connection con;
     private static String[] status;
+    private static String[] fineStatus;
     /**
      * Creates new form EditUserDialog
      * @param parent the component calling this class
      * @param con the connection to database
      * @param accession id of the user to be edited
      */
-    public AddTransactionDialog(java.awt.Dialog parent, Connection con, String accession) {
+    public EditReturnDialog(java.awt.Dialog parent, Connection con, String accession) {
         super(parent);
         status = new String[] {"WITHDRAWN", "RETURNED"};
-        
+        fineStatus = new String[] {"PAID"};
         initComponents();
         
         this.con = con;
@@ -53,7 +54,7 @@ public class AddTransactionDialog extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         loginidLabel = new javax.swing.JLabel();
-        reserveDate = new javax.swing.JLabel();
+        borrowLabel = new javax.swing.JLabel();
         copynoLabel = new javax.swing.JLabel();
         loginidField = new javax.swing.JTextField();
         isbnField = new javax.swing.JTextField();
@@ -61,7 +62,9 @@ public class AddTransactionDialog extends javax.swing.JDialog {
         copynoField = new javax.swing.JTextField();
         statusLabel = new javax.swing.JLabel();
         statusField = new javax.swing.JComboBox(status);
-        reservedateField = new javax.swing.JTextField();
+        borrowField = new javax.swing.JTextField();
+        finestatusLabel = new javax.swing.JLabel();
+        finestatusField = new javax.swing.JComboBox(fineStatus);
         addLabel = new javax.swing.JLabel();
         confirmButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
@@ -76,8 +79,8 @@ public class AddTransactionDialog extends javax.swing.JDialog {
         loginidLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
         loginidLabel.setText("Login ID");
 
-        reserveDate.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
-        reserveDate.setText("Reserved Date");
+        borrowLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
+        borrowLabel.setText("Borrowed Date");
 
         copynoLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
         copynoLabel.setText("Copy no.");
@@ -87,6 +90,9 @@ public class AddTransactionDialog extends javax.swing.JDialog {
 
         statusLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
         statusLabel.setText("Status");
+
+        finestatusLabel.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
+        finestatusLabel.setText("Fine Status");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -106,14 +112,16 @@ public class AddTransactionDialog extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(copynoLabel)
-                            .addComponent(reserveDate)
-                            .addComponent(statusLabel))
+                            .addComponent(borrowLabel)
+                            .addComponent(statusLabel)
+                            .addComponent(finestatusLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(copynoField)
                             .addComponent(statusField, 0, 176, Short.MAX_VALUE)
-                            .addComponent(reservedateField))))
-                .addContainerGap())
+                            .addComponent(borrowField)
+                            .addComponent(finestatusField, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,13 +140,17 @@ public class AddTransactionDialog extends javax.swing.JDialog {
                     .addComponent(copynoLabel))
                 .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(reserveDate)
-                    .addComponent(reservedateField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(borrowLabel)
+                    .addComponent(borrowField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(statusLabel)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(finestatusLabel)
+                    .addComponent(finestatusField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         addLabel.setFont(new java.awt.Font("Nirmala UI", 1, 20)); // NOI18N
@@ -172,7 +184,7 @@ public class AddTransactionDialog extends javax.swing.JDialog {
                         .addComponent(confirmButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(addLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,7 +193,7 @@ public class AddTransactionDialog extends javax.swing.JDialog {
                 .addComponent(addLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(confirmButton)
                     .addComponent(cancelButton))
@@ -195,23 +207,25 @@ public class AddTransactionDialog extends javax.swing.JDialog {
         int id = Integer.parseInt(loginidField.getText());
         String isbn = isbnField.getText();
         String copyno = copynoField.getText();
-        String rdate = reservedateField.getText();
+        String bdate = borrowField.getText();
         String s = statusField.getSelectedItem().toString();
+        String fs = finestatusField.getSelectedItem().toString();
         
         try {
-            cst = con.prepareCall("{CALL withdrawbook(?,?,?,?,?,?)}");
+            cst = con.prepareCall("{CALL returnbook(?,?,?,?,?,?,?)}");
             cst.setInt(1, id);
             cst.setString(2, isbn);
             cst.setString(3, copyno);
-            cst.setString(4, null);
-            cst.setString(6, rdate);
-            cst.setString(5, s);
+            cst.setString(4, s);
+            cst.setString(5, bdate);
+            cst.setString(6, null);
+            cst.setString(7, fs);
             
-            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Confirm adding transaction?", "Add transaction", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-//            System.out.println("confirm: " + confirmation);
+            int confirmation = JOptionPane.showConfirmDialog(rootPane, "Confirm edit transaction?", "Edit transaction", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            System.out.println("confirm: " + confirmation);
             if (confirmation == 0) {
                 cst.execute();
-                JOptionPane.showMessageDialog(rootPane, "Transaction complete!", "Add transaction", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Transaction complete!", "Edit transaction", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             }
         }
@@ -225,17 +239,19 @@ public class AddTransactionDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addLabel;
+    private javax.swing.JTextField borrowField;
+    private javax.swing.JLabel borrowLabel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton confirmButton;
     private javax.swing.JTextField copynoField;
     private javax.swing.JLabel copynoLabel;
+    private javax.swing.JComboBox finestatusField;
+    private javax.swing.JLabel finestatusLabel;
     private javax.swing.JTextField isbnField;
     private javax.swing.JLabel isbnLabel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField loginidField;
     private javax.swing.JLabel loginidLabel;
-    private javax.swing.JLabel reserveDate;
-    private javax.swing.JTextField reservedateField;
     private javax.swing.JComboBox statusField;
     private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables

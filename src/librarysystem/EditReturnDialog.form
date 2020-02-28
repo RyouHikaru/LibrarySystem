@@ -38,7 +38,7 @@
                   <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                   <Component id="addLabel" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="45" max="32767" attributes="0"/>
+              <EmptySpace pref="40" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -49,7 +49,7 @@
               <Component id="addLabel" min="-2" pref="40" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="35" max="32767" attributes="0"/>
+              <EmptySpace pref="58" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="confirmButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -91,18 +91,20 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="copynoLabel" min="-2" max="-2" attributes="0"/>
-                              <Component id="reserveDate" min="-2" max="-2" attributes="0"/>
+                              <Component id="borrowLabel" min="-2" max="-2" attributes="0"/>
                               <Component id="statusLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="finestatusLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="copynoField" max="32767" attributes="0"/>
                               <Component id="statusField" alignment="0" pref="176" max="32767" attributes="0"/>
-                              <Component id="reservedateField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="borrowField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="finestatusField" alignment="1" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -126,15 +128,20 @@
                   </Group>
                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="reserveDate" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="reservedateField" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="borrowLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="borrowField" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="statusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="statusField" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="36" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="finestatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="finestatusField" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="29" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -148,12 +155,12 @@
             <Property name="text" type="java.lang.String" value="Login ID"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="reserveDate">
+        <Component class="javax.swing.JLabel" name="borrowLabel">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Nirmala UI" size="18" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Reserved Date"/>
+            <Property name="text" type="java.lang.String" value="Borrowed Date"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="copynoLabel">
@@ -191,7 +198,20 @@
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox(status)"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JTextField" name="reservedateField">
+        <Component class="javax.swing.JTextField" name="borrowField">
+        </Component>
+        <Component class="javax.swing.JLabel" name="finestatusLabel">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Nirmala UI" size="18" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Fine Status"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="finestatusField">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox(fineStatus)"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

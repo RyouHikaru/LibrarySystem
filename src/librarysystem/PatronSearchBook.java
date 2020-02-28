@@ -98,11 +98,11 @@ public class PatronSearchBook extends javax.swing.JDialog {
 
             },
             new String [] {
-                "ISBN no.", "Title", "Copy no.", "Author", "Published Year", "Place of Publication", "Status"
+                "ISBN no.", "Title", "Copy no.", "Author", "Shelf ID", "Published Year", "Place of Publication", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -206,10 +206,11 @@ public class PatronSearchBook extends javax.swing.JDialog {
                 dModel.setValueAt(finalRs.getString("isbn_no"), i, 0);
                 dModel.setValueAt(finalRs.getString("book_title"), i, 1);
                 dModel.setValueAt(finalRs.getString("copy_no"), i, 2);
-                dModel.setValueAt(finalRs.getString("author_name"), i, 3);
-                dModel.setValueAt(finalRs.getString("year_of_publication"), i, 4);
-                dModel.setValueAt(finalRs.getString("place_of_publication"), i, 5);
-                dModel.setValueAt(finalRs.getString("current_status"), i, 6);
+                dModel.setValueAt(finalRs.getString("shelf_id"), i, 3);
+                dModel.setValueAt(finalRs.getString("author_name"), i, 4);
+                dModel.setValueAt(finalRs.getString("year_of_publication"), i, 5);
+                dModel.setValueAt(finalRs.getString("place_of_publication"), i, 6);
+                dModel.setValueAt(finalRs.getString("current_status"), i, 7);
                 i++;
             } 
             
@@ -234,7 +235,7 @@ public class PatronSearchBook extends javax.swing.JDialog {
         } catch (SQLException ex) { System.out.println(ex.getMessage());}
     }
     private Object[] columns() {
-        Object[] ret = {"ISBN no.", "Title", "Copy no.", "Author", "Published Year", "Place of Publication", "Status"};
+        Object[] ret = {"ISBN no.", "Title", "Copy no.", "Shelf ID", "Author", "Published Year", "Place of Publication", "Status"};
         return ret;
     }
     private void autoUpdateReservationSystem() {
